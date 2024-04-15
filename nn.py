@@ -76,7 +76,7 @@ class NeuralNetwork:
                 print("vượt quá giới hạn tìm độ dốc")
                 break
 
-            print(f"Epoch {i+1}, Loss: {pre_loss}")
+            print(f"Epoch {i+1}/{epochs}, Loss: {pre_loss}")
     
     def predict(self, x, layers):
         layers_op_final = x
