@@ -100,15 +100,19 @@ y = np.array(y)
 
 # mô hình phân loại đa lớp
 layers = [
-NeuralNetwork(input_dim=4, hidden_dim=512, activation="tanh"),
-NeuralNetwork(input_dim=512, hidden_dim=512, activation="tanh"),
-NeuralNetwork(input_dim=512, hidden_dim=512, activation="tanh"),
-NeuralNetwork(input_dim=512, hidden_dim=len(y), activation="softmax")
+NeuralNetwork(input_dim=4, hidden_dim=64, activation="relu"),
+NeuralNetwork(input_dim=64, hidden_dim=1000, activation="relu"),
+NeuralNetwork(input_dim=1000, hidden_dim=500, activation="relu"),
+NeuralNetwork(input_dim=500, hidden_dim=len(y), activation="softmax")
 ]
 
-i = 1
 model = NeuralNetwork()
-model.backward(layers=layers, x=x, y=y, epochs=1000, lr=0.1)
-y_pred = model.predict(layers=layers, x=np.array([x[i]]))
-print(f"y test: {y[i]}")
-print("y predict: ", np.argmax(y_pred))
+model.backward(layers=layers, x=x, y=y, epochs=300, lr=0.001)
+
+# thử nghiệm mô hình
+while True:
+    i = int(input("Bạn: "))
+    y_pred = model.predict(layers=layers, x=np.array([x[i]]))
+    print(f"y test: {y[i][0]}")
+    print("y predict: ", np.argmax(y_pred))
+    print()
