@@ -123,18 +123,19 @@ y = np.array([
     [4]])
 
 # mô hình phân loại đa lớp
+hidden_dim_test = 700
 layers = [
-NeuralNetwork(input_dim=4, hidden_dim=1000, activation="tanh"),
-NeuralNetwork(input_dim=1000, hidden_dim=1000, activation="tanh"),
-NeuralNetwork(input_dim=1000, hidden_dim=1000, activation="tanh"),
-NeuralNetwork(input_dim=1000, hidden_dim=1000, activation="tanh"),
-NeuralNetwork(input_dim=1000, hidden_dim=1000, activation="tanh"),
-NeuralNetwork(input_dim=1000, hidden_dim=4, activation="softmax")
+NeuralNetwork(input_dim=4, hidden_dim=hidden_dim_test, activation="tanh"),
+NeuralNetwork(input_dim=hidden_dim_test, hidden_dim=hidden_dim_test, activation="tanh"),
+NeuralNetwork(input_dim=hidden_dim_test, hidden_dim=hidden_dim_test, activation="tanh"),
+NeuralNetwork(input_dim=hidden_dim_test, hidden_dim=hidden_dim_test, activation="tanh"),
+NeuralNetwork(input_dim=hidden_dim_test, hidden_dim=hidden_dim_test, activation="tanh"),
+NeuralNetwork(input_dim=hidden_dim_test, hidden_dim=4, activation="softmax")
 ]
 
 model = NeuralNetwork()
-model.backward(layers=layers, x=x, y=y, epochs=500, lr=0.001, limit_cost_decimal=4,
-                limit_grad_finding=200)
+model.backward(layers=layers, x=x, y=y, epochs=50, lr=0.001, limit_cost_decimal=3,
+                limit_grad_finding=10000)
 
 # thử nghiệm mô hình
 while True:
