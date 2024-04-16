@@ -137,7 +137,7 @@ model.backward(layers=layers, x=x, y=y, epochs=500, lr=0.001, limit_cost_decimal
 
 # thử nghiệm mô hình
 while True:
-    i = int(input("Bạn: "))
+    i = int(input("Nhập vào một số 0 -> 4 để dự đoán: "))
     y_pred = model.predict(layers=layers, x=np.array([x[i]]))
     print(f"y test: {y[i][0]}")
     print("y predict: ", np.argmax(y_pred))
