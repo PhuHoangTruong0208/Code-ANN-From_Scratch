@@ -103,7 +103,7 @@ class NeuralNetwork:
         layers_op_final = x
         for layer in layers:
             layers_op_final = layer.forward(layers_op_final)
-            
+
         return layers_op_final
 
 
@@ -144,18 +144,18 @@ y = np.array([
     [4]])
 
 # mô hình phân loại đa lớp
-hidden_dim_test = 512
+hidden_dim_test = 800
 layers = [
-NeuralNetwork(input_dim=4, hidden_dim=hidden_dim_test),
-NeuralNetwork(input_dim=hidden_dim_test, hidden_dim=hidden_dim_test, activation="relu"),
+NeuralNetwork(input_dim=4, hidden_dim=hidden_dim_test, activation="tanh"),
+NeuralNetwork(input_dim=hidden_dim_test, hidden_dim=hidden_dim_test, activation="tanh"),
 NeuralNetwork(input_dim=hidden_dim_test, hidden_dim=hidden_dim_test, activation="tanh"),
 NeuralNetwork(input_dim=hidden_dim_test, hidden_dim=hidden_dim_test, activation="tanh"),
 NeuralNetwork(input_dim=hidden_dim_test, hidden_dim=4, activation="softmax")
 ]
 
 model = NeuralNetwork()
-model.backward(layers=layers, x=x, y=y, epochs=50, lr=0.001, limit_cost_decimal=4,
-                limit_grad_finding=1000)
+model.backward(layers=layers, x=x, y=y, epochs=50, lr=0.001, limit_cost_decimal=3,
+                limit_grad_finding=100)
 
 # thử nghiệm mô hình
 while True:
