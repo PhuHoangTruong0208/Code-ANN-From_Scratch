@@ -54,8 +54,11 @@ class NeuralNetwork:
         assert isinstance(layers, list), "cần 1 danh sách chứa các layers"
         pre_loss = 1e100
         break_all = False
+        update_w_list_temp, update_b_list_temp = [], []
+        update_w_list, update_b_list = [], []
         for i in range(epochs):
             for f in range(limit_grad_finding):
+                update_w_list_temp, update_b_list_temp = [], []
                 layers_op_final = x
                 for layer in layers:
                     layer_output = layer.forward(layers_op_final)
@@ -63,6 +66,9 @@ class NeuralNetwork:
                     layer.weights -= lr * update_weights
                     layer.biases -= lr * update_bias
                     layers_op_final = layer_output
+                    # trọng số tạm để lệnh so sánh độ loss quyết định lưu lại hoặc không
+                    update_w_list_temp.append(update_weights)
+                    update_b_list_temp.append(update_bias)
 
                 loss = self.compute_cost(y_pred=layers_op_final, y=y)
 
@@ -70,6 +76,13 @@ class NeuralNetwork:
                     break_all = True
 
                 if round(loss, limit_cost_decimal) < round(pre_loss, limit_cost_decimal):
+                    # lưu lại các trọng số tốt nhất đã tìm thấy
+                    update_w_list, update_b_list = [], []
+                    for we in update_w_list_temp:
+                        update_w_list.append(we)
+                    for bi in update_b_list_temp:
+                        update_b_list.append(bi)
+                    # cập nhật lỗi
                     pre_loss = loss
                     break
 
@@ -78,11 +91,19 @@ class NeuralNetwork:
                 break
 
             print(f"Epoch {i+1}/{epochs}, Loss: {pre_loss}")
-    
+        
+        # cập nhật trọng số tốt nhất
+        for i in range(len(layers)):
+            layers[i].weights = update_w_list[i]
+            layers[i].biases = update_b_list[i]
+
+        return "hoàn thành lan truyền ngược"
+        
     def predict(self, x, layers):
         layers_op_final = x
         for layer in layers:
             layers_op_final = layer.forward(layers_op_final)
+            
         return layers_op_final
 
 
@@ -123,19 +144,18 @@ y = np.array([
     [4]])
 
 # mô hình phân loại đa lớp
-hidden_dim_test = 700
+hidden_dim_test = 512
 layers = [
-NeuralNetwork(input_dim=4, hidden_dim=hidden_dim_test, activation="tanh"),
-NeuralNetwork(input_dim=hidden_dim_test, hidden_dim=hidden_dim_test, activation="tanh"),
-NeuralNetwork(input_dim=hidden_dim_test, hidden_dim=hidden_dim_test, activation="tanh"),
+NeuralNetwork(input_dim=4, hidden_dim=hidden_dim_test),
+NeuralNetwork(input_dim=hidden_dim_test, hidden_dim=hidden_dim_test, activation="relu"),
 NeuralNetwork(input_dim=hidden_dim_test, hidden_dim=hidden_dim_test, activation="tanh"),
 NeuralNetwork(input_dim=hidden_dim_test, hidden_dim=hidden_dim_test, activation="tanh"),
 NeuralNetwork(input_dim=hidden_dim_test, hidden_dim=4, activation="softmax")
 ]
 
 model = NeuralNetwork()
-model.backward(layers=layers, x=x, y=y, epochs=50, lr=0.001, limit_cost_decimal=3,
-                limit_grad_finding=10000)
+model.backward(layers=layers, x=x, y=y, epochs=50, lr=0.001, limit_cost_decimal=4,
+                limit_grad_finding=1000)
 
 # thử nghiệm mô hình
 while True:
