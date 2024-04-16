@@ -47,7 +47,8 @@ class NeuralNetwork:
         return update_weights, update_biases
 
     def compute_cost(self, y, y_pred):
-            return np.mean(np.square(y - y_pred))
+            m = float(len(y))
+            return np.mean(np.square(y - y_pred)) / m
     
     def backward(self, layers, x, y, epochs=2, lr=0.001, limit_cost_decimal=3, limit_grad_finding=100000):
         assert isinstance(layers, list), "cần 1 danh sách chứa các layers"
